@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Contact | Edural Classes</title>
+
+<style>
+    
+:root{
+  --primary:#1e88e5;
+  --dark:#0f172a;
+  --bg:#eaf2fb;
+}
+
+/* RESET */
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family: Arial, sans-serif;
+}
+
+body{
+  height:100vh;
+  display:flex;
+  background:var(--bg);
+  overflow:hidden;
+}
+
+/* SIDEBAR */
+.sidebar{
+  width:220px;
+  background:#0f172a;
+  color:white;
+  padding:40px 0;
+  display:flex;
+  flex-direction:column;
+}
+.brand{
+  font-size:22px;
+  font-weight:800;
+  padding:0 30px;
+  margin-bottom:40px;
+}
+.nav a{
+  padding:15px 30px;
+  display:block;
+  text-decoration:none;
+  color:#94a3b8;
+  font-weight:600;
+}
+.nav a.active{
+  background:#1e293b;
+  color:white;
+  border-left:5px solid var(--primary);
+}
+.logout{
+  margin-top:auto;
+  padding:15px 30px;
+  color:#ef4444;
+  font-weight:600;
+  cursor:pointer;
+}
+
+/* MAIN */
+.main{
+  flex:1;
+  display:flex;
+  overflow-y:auto;
+}
+
+/* CONTACT LAYOUT */
+.left{
+  width:50%;
+  background:linear-gradient(180deg,#1e88e5,#0d47a1);
+  color:white;
+  padding:70px;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+}
+
+.badge{
+  background:#2196f3;
+  display:inline-block;
+  padding:10px 24px;
+  border-radius:30px;
+  font-weight:600;
+  margin-bottom:25px;
+}
+
+.left h2{
+  font-size:32px;
+  margin-bottom:15px;
+}
+
+.left p{
+  line-height:1.7;
+  font-size:16px;
+  margin-bottom:15px;
+}
+
+.right{
+  width:50%;
+  background:white;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  padding:20px;
+}
+
+.form-box{
+  width:100%;
+  max-width:420px;
+}
+
+.form-box h3{
+  text-align:center;
+  margin-bottom:25px;
+  font-size:26px;
+  font-weight:700;
+  color:#1e88e5;
+}
+
+.form-box input,
+.form-box textarea{
+  width:100%;
+  padding:16px 18px;
+  margin-bottom:16px;
+  border-radius:30px;
+  border:1px solid #cfd8dc;
+  font-size:16px;
+  outline:none;
+}
+
+.form-box textarea{
+  resize:none;
+  height:120px;
+}
+
+.send-btn{
+  width:100%;
+  padding:16px;
+  border-radius:30px;
+  border:none;
+  background:#1e88e5;
+  color:white;
+  font-size:16px;
+  font-weight:600;
+  cursor:pointer;
+}
+
+.send-btn:disabled{
+  background:#90caf9;
+  cursor:not-allowed;
+}
+
+.success{
+  text-align:center;
+  margin-top:15px;
+  color:green;
+  font-weight:600;
+  display:none;
+}
+
+.privacy{
+  font-size:13px;
+  margin-top:18px;
+  color:#475569;
+  text-align:center;
+}
+
+/* MOBILE */
+@media(max-width:900px){
+  .sidebar{display:none;}
+  .main{flex-direction:column;}
+  .left,.right{width:100%;}
+  .left{padding:40px 25px;text-align:center;}
+}
+</style>
+</head>
+
+<body>
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="brand">Edural</div>
+  <div class="nav">
+    <a href="dashboard.html">Dashboard</a>
+    <a href="marks.html">Marks</a>
+    <a href="attendance.html">Attendance</a>
+    <a href="about.html">About</a>
+    <a class="active">Contact</a>
+  </div>
+  <div class="logout" onclick="logout()">Logout</div>
+</aside>
+
+<!-- MAIN -->
+<div class="main">
+
+  <!-- LEFT -->
+  <div class="left">
+    <div class="badge">Contact Us</div>
+    <h2>Edural Classes</h2>
+    <p>Bihar, Patna<br>Patna - 800024</p>
+    <p><strong>Call:</strong> +91 7368050555</p>
+    <p><strong>Email:</strong> eduralclasses@gmail.com</p>
+  </div>
+
+  <!-- RIGHT -->
+  <div class="right">
+    <div class="form-box">
+      <h3>Get Free Expert Guidance</h3>
+
+      <input type="text" id="name" placeholder="Full Name">
+      <input type="email" id="email" placeholder="Email">
+      <input type="text" id="phone" placeholder="Phone Number">
+      <textarea id="message" placeholder="Message"></textarea>
+
+      <button class="send-btn" id="sendBtn" disabled>Send Message</button>
+
+      <div class="success" id="successMsg">✅ Message Sent Successfully</div>
+
+      <div class="privacy">
+        We value your privacy. Your contact information is never shared.
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+const nameInput=document.getElementById("name");
+const emailInput=document.getElementById("email");
+const phoneInput=document.getElementById("phone");
+const messageInput=document.getElementById("message");
+const sendBtn=document.getElementById("sendBtn");
+const successMsg=document.getElementById("successMsg");
+
+function validateForm(){
+  if(
+    nameInput.value.trim() &&
+    emailInput.value.includes("@") &&
+    phoneInput.value.length>=10 &&
+    messageInput.value.trim()
+  ){
+    sendBtn.disabled=false;
+  }else{
+    sendBtn.disabled=true;
+  }
+}
+
+[nameInput,emailInput,phoneInput,messageInput]
+.forEach(i=>i.addEventListener("input",validateForm));
+
+sendBtn.onclick=()=>{
+  const messages=JSON.parse(localStorage.getItem("messages"))||[];
+  messages.push({
+    name:nameInput.value,
+    email:emailInput.value,
+    phone:phoneInput.value,
+    message:messageInput.value,
+    date:new Date().toLocaleString()
+  });
+  localStorage.setItem("messages",JSON.stringify(messages));
+
+  successMsg.style.display="block";
+  nameInput.value=emailInput.value=phoneInput.value=messageInput.value="";
+  sendBtn.disabled=true;
+
+  setTimeout(()=>successMsg.style.display="none",3000);
+};
+
+function logout(){
+  localStorage.removeItem("currentUser");
+  location.href="login.html";
+}
+</script>
+
+</body>
+</html>

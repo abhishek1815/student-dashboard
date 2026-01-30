@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Student Performance Dashboard</title>
+
+<style>
+:root{
+  --primary:#1e40af;
+  --accent:#3b82f6;
+  --bg:#f1f5f9;
+  --dark:#1e293b;
+  --light:#64748b;
+}
+
+*{margin:0;padding:0;box-sizing:border-box;font-family:Segoe UI,system-ui}
+
+body{
+  background:var(--bg);
+  height:100vh;
+  display:flex;
+  overflow:hidden;
+}
+
+/* SIDEBAR */
+.sidebar{
+  width:220px;
+  background:#0f172a;
+  color:#fff;
+  padding:40px 0;
+}
+
+.brand{
+  font-size:26px;
+  font-weight:800;
+  padding:0 30px;
+  margin-bottom:40px;
+}
+
+.nav a{
+  display:block;
+  padding:16px 30px;
+  color:#94a3b8;
+  text-decoration:none;
+  font-weight:600;
+}
+
+.nav a.active{
+  color:#fff;
+  background:#1e293b;
+  border-left:5px solid var(--accent);
+}
+
+/* MAIN */
+.main{
+  flex:1;
+  padding:40px;
+  display:flex;
+  flex-direction:column;
+  gap:30px;
+}
+
+.header h1{
+  font-size:32px;
+  color:var(--dark);
+}
+
+.header p{
+  font-size:18px;
+  color:var(--light);
+}
+
+/* GRID */
+.dashboard{
+  display:grid;
+  grid-template-columns:1.1fr 1fr 1.1fr;
+  grid-template-rows:250px 1fr;
+  gap:25px;
+  flex:1;
+}
+
+.card{
+  background:#fff;
+  border-radius:26px;
+  padding:22px;
+  box-shadow:0 10px 25px rgba(0,0,0,.05);
+}
+
+/* RINGS */
+.ring{
+  position:relative;
+  border-radius:50%;
+  display:grid;
+  place-items:center;
+}
+
+.ring-lg{height:180px;background:conic-gradient(#fff 0%,#ccc 0)}
+.ring-md{height:140px;background:conic-gradient(var(--accent) 0%,#eee 0)}
+.ring-sm{height:70px;background:conic-gradient(var(--accent) 0%,#eee 0)}
+
+.ring::after{
+  content:attr(data-val);
+  position:absolute;
+  width:70%;
+  height:70%;
+  background:#fff;
+  border-radius:50%;
+  display:grid;
+  place-items:center;
+  font-weight:800;
+}
+
+/* BARS */
+.graph-inner{
+  display:flex;
+  align-items:flex-end;
+  justify-content:space-around;
+  height:100%;
+  padding:10px 20px;
+}
+
+.bar-wrap{
+  width:14%;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+}
+
+.bar{
+  width:100%;
+  background:var(--primary);
+  border-radius:10px 10px 0 0;
+}
+
+.label{
+  margin-top:8px;
+  font-size:13px;
+  font-weight:700;
+  color:var(--light);
+}
+
+/* RANK */
+.rank{
+  display:flex;
+  justify-content:space-between;
+  padding:10px 0;
+  border-bottom:1px solid #eee;
+  font-weight:700;
+}
+
+.rank.me{
+  color:var(--primary);
+  font-size:18px;
+}
+</style>
+</head>
+
+<body>
+
+<script>
+const currentUser = JSON.parse(localStorage.getItem("currentUser"));
+if(!currentUser) location.href="login.html";
+</script>
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="brand">Edural</div>
+  <div class="nav">
+    <a class="active">Dashboard</a>
+    <a href="marks.html">Marks</a>
+    <a href="attendance.html">Attendance</a>
+    <a href="about.html">About</a>
+    <a href="contact.html">Contact</a>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<main class="main">
+  <div class="header">
+    <h1>Student Performance Dashboard</h1>
+    <p id="welcome"></p>
+  </div>
+
+  <div class="dashboard">
+
+    <!-- OVERALL -->
+    <div class="card" style="display:flex;flex-direction:column;align-items:center;justify-content:center;background:linear-gradient(135deg,#1e3a8a,#3b82f6);color:white">
+      <h3>Overall Performance</h3>
+      <div class="ring ring-lg" id="overall" data-val="0%"></div>
+    </div>
+
+    <!-- ASSIGN / QUIZ -->
+    <div class="card" style="display:flex;flex-direction:column;gap:20px">
+      <div>
+        <b>Assignment</b>
+        <div class="ring ring-sm" id="assign" data-val="0%"></div>
+      </div>
+      <div>
+        <b>Quiz</b>
+        <div class="ring ring-sm" id="quiz" data-val="0%"></div>
+      </div>
+    </div>
+
+    <!-- ATTENDANCE -->
+    <div class="card" style="display:flex;flex-direction:column;align-items:center;justify-content:center">
+      <h3>Attendance</h3>
+      <div class="ring ring-md" id="att" data-val="0%"></div>
+    </div>
+
+    <!-- SUBJECT GRAPH -->
+    <div class="card" style="grid-column:span 2">
+      <h3>Subject Wise Performance</h3>
+      <div class="graph-inner" id="graph"></div>
+    </div>
+
+    <!-- RANK -->
+    <div class="card" id="rankBox">
+      <h3>Class Performance</h3>
+    </div>
+
+  </div>
+</main>
+
+<script>
+const users = JSON.parse(localStorage.getItem("users"))||[];
+const marks = JSON.parse(localStorage.getItem("marks"))||[];
+const attendance = JSON.parse(localStorage.getItem("attendance"))||[];
+const user = currentUser;
+
+document.getElementById("welcome").innerText = "Welcome, " + user.name;
+
+// OVERALL
+const myMarks = marks.filter(m=>m.email===user.email);
+let s=0,t=0;
+myMarks.forEach(m=>{s+=m.scored;t+=m.total});
+const overall = t?Math.round((s/t)*100):0;
+overallUI(overall);
+
+function overallUI(p){
+  overallEl=document.getElementById("overall");
+  overallEl.style.background=`conic-gradient(#fff ${p}%,rgba(255,255,255,.3) 0)`;
+  overallEl.setAttribute("data-val",p+"%");
+}
+
+// ASSIGN / QUIZ
+function calc(type){
+  const f=myMarks.filter(m=>m.type===type);
+  let s=0,t=0;
+  f.forEach(x=>{s+=x.scored;t+=x.total});
+  return t?Math.round((s/t)*100):0;
+}
+setRing("assign",calc("Assignment"));
+setRing("quiz",calc("Quiz"));
+
+function setRing(id,p){
+  const el=document.getElementById(id);
+  el.style.background=`conic-gradient(var(--accent) ${p}%,#eee 0)`;
+  el.setAttribute("data-val",p+"%");
+}
+
+// ATTENDANCE
+const myAtt=attendance.filter(a=>a.email===user.email);
+let a=0,ta=0;
+myAtt.forEach(x=>{a+=x.attended;ta+=x.total});
+const ap=ta?Math.round((a/ta)*100):0;
+setRing("att",ap);
+
+// GRAPH
+const subjects=["English","Mathematics","HTML & CSS","Python","JavaScript"];
+const graph=document.getElementById("graph");
+subjects.forEach(sub=>{
+  const sm=myMarks.filter(m=>m.subject===sub);
+  let s=0,t=0;
+  sm.forEach(x=>{s+=x.scored;t+=x.total});
+  const p=t?Math.round((s/t)*100):0;
+  graph.innerHTML+=`
+    <div class="bar-wrap">
+      <div class="bar" style="height:${p}%"></div>
+      <div class="label">${sub}</div>
+    </div>`;
+});
+
+// RANKING
+const ranks=users.filter(u=>u.role==="student").map(st=>{
+  const sm=marks.filter(m=>m.email===st.email);
+  let s=0,t=0;
+  sm.forEach(x=>{s+=x.scored;t+=x.total});
+  return {name:st.name,email:st.email,p:t?Math.round((s/t)*100):0};
+}).sort((a,b)=>b.p-a.p);
+
+const box=document.getElementById("rankBox");
+ranks.forEach((r,i)=>{
+  box.innerHTML+=`
+    <div class="rank ${r.email===user.email?'me':''}">
+      <span>${i+1}. ${r.name}</span>
+      <span>${r.p}%</span>
+    </div>`;
+});
+</script>
+
+</body>
+</html>

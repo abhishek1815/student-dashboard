@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Create Account | Student Performance Dashboard</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{
+  font-family:'Inter',sans-serif;
+  min-height:100vh;
+  background:rgb(241,245,249);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+.card{
+  width:100%;
+  max-width:900px;
+  background:#fff;
+  border-radius:26px;
+  box-shadow:0 40px 80px rgba(0,0,0,.2);
+  display:grid;
+  grid-template-columns:1fr 1fr;
+}
+.left{padding:50px 45px}
+.left h1{font-size:32px;margin-bottom:6px}
+.left p{font-size:14px;color:rgb(71,85,105);margin-bottom:30px}
+label{font-size:13px;font-weight:600;margin-bottom:6px;display:block}
+.field{
+  background:rgb(248,250,252);
+  border-radius:14px;
+  padding:12px 14px;
+  border:1px solid rgb(226,232,240);
+  margin-bottom:18px;
+}
+.field input{
+  border:none;
+  outline:none;
+  width:100%;
+  background:transparent;
+}
+button{
+  width:100%;
+  padding:14px;
+  border-radius:999px;
+  border:none;
+  font-weight:600;
+  cursor:pointer;
+  background:linear-gradient(135deg,rgb(16,185,129),rgb(14,165,233));
+  color:white;
+}
+.error{
+  font-size:13px;
+  color:rgb(220,38,38);
+  margin-bottom:12px;
+  display:none;
+}
+.bottom{
+  margin-top:18px;
+  font-size:13px;
+  text-align:center;
+}
+.bottom a{
+  color:rgb(14,165,233);
+  font-weight:600;
+  text-decoration:none;
+}
+.right{
+  background:linear-gradient(135deg,rgb(16,185,129),rgb(14,165,233));
+  color:white;
+  padding:50px 40px;
+}
+@media(max-width:900px){
+  .card{grid-template-columns:1fr}
+  .right{display:none}
+}
+</style>
+</head>
+
+<body>
+
+<div class="card">
+
+  <!-- LEFT -->
+  <div class="left">
+    <h1>Create Student Account</h1>
+    <p>Only teachers can create student accounts</p>
+
+    <div id="error" class="error"></div>
+
+    <label>Teacher ID</label>
+    <div class="field">
+      <input type="text" id="teacherId" placeholder="Enter Teacher ID">
+    </div>
+
+    <label>Student Name</label>
+    <div class="field">
+      <input type="text" id="name" placeholder="Student name">
+    </div>
+
+    <label>Email</label>
+    <div class="field">
+      <input type="email" id="email" placeholder="Student email">
+    </div>
+
+    <label>Password</label>
+    <div class="field">
+      <input type="password" id="password" placeholder="Password">
+    </div>
+
+    <button onclick="register()">Create Account</button>
+
+    <div class="bottom">
+      Already have an account?
+      <a href="login.html">Login</a>
+    </div>
+  </div>
+
+  <!-- RIGHT -->
+  <div class="right">
+    <h1>Edural Classes</h1>
+    <h2>Student Performance Dashboard</h2>
+    <p>
+      Teacher ID ensures that only authorized teachers
+      can create student accounts for the dashboard.
+    </p>
+  </div>
+
+</div>
+
+<script>
+/* 🔐 TEACHER ID */
+const TEACHER_ID = "EDURAL-TEACH-2026";
+
+function register(){
+  const teacherId = document.getElementById("teacherId").value.trim();
+  const name = document.getElementById("name").value.trim();
+  const email = document.getElementById("email").value.trim();
+  const password = document.getElementById("password").value.trim();
+  const error = document.getElementById("error");
+
+  /* VALIDATION */
+  if(teacherId !== TEACHER_ID){
+    error.textContent = "Invalid Teacher ID";
+    error.style.display = "block";
+    return;
+  }
+
+  if(!name || !email || !password){
+    error.textContent = "All fields are required";
+    error.style.display = "block";
+    return;
+  }
+
+  let users = JSON.parse(localStorage.getItem("users")) || [];
+  let students = JSON.parse(localStorage.getItem("students")) || [];
+
+  /* DUPLICATE CHECK */
+  if(users.some(u => u.email === email)){
+    error.textContent = "Student already exists";
+    error.style.display = "block";
+    return;
+  }
+
+  const studentId = "STD-" + Date.now();
+
+  /* LOGIN DATA */
+  users.push({
+    email,
+    password
+  });
+
+  /* STUDENT DATA */
+  students.push({
+    studentId,
+    name,
+    email,
+    marks: [],
+    attendance: []
+  });
+
+  localStorage.setItem("users", JSON.stringify(users));
+  localStorage.setItem("students", JSON.stringify(students));
+
+  window.location.href = "login.html";
+}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Marks | Student Performance Dashboard</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+:root{
+  --primary:#1e40af;
+  --accent:#3b82f6;
+  --bg:#f1f5f9;
+  --dark:#0f172a;
+  --text:#334155;
+}
+*{margin:0;padding:0;box-sizing:border-box;font-family:Segoe UI,system-ui;}
+
+body{
+  background:var(--bg);
+  height:100vh;
+  display:flex;
+  overflow:hidden;
+}
+
+/* SIDEBAR */
+.sidebar{
+  width:220px;
+  background:#0f172a;
+  color:white;
+  padding:40px 0;
+  display:flex;
+  flex-direction:column;
+}
+.brand{
+  font-size:22px;
+  font-weight:800;
+  padding:0 30px;
+  margin-bottom:40px;
+}
+.nav a{
+  padding:15px 30px;
+  color:#94a3b8;
+  text-decoration:none;
+  font-weight:600;
+  display:block;
+}
+.nav a.active{
+  background:#1e293b;
+  color:white;
+  border-left:5px solid var(--accent);
+}
+.logout{
+  margin-top:auto;
+  padding:15px 30px;
+  cursor:pointer;
+  color:#ef4444;
+  font-weight:600;
+}
+
+/* MAIN */
+.main{
+  flex:1;
+  padding:35px;
+  overflow-y:auto;
+}
+
+.header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:25px;
+}
+.header h1{
+  font-size:26px;
+  color:var(--dark);
+}
+.add-btn{
+  padding:12px 20px;
+  background:var(--accent);
+  border:none;
+  color:white;
+  border-radius:10px;
+  font-weight:700;
+  cursor:pointer;
+}
+
+/* MARK LIST */
+.list{
+  display:flex;
+  flex-direction:column;
+  gap:14px;
+}
+.card{
+  background:white;
+  padding:18px 22px;
+  border-radius:14px;
+  display:grid;
+  grid-template-columns:1.3fr 1fr 1fr 1fr 1fr auto;
+  align-items:center;
+  box-shadow:0 8px 18px rgba(0,0,0,.05);
+  font-weight:600;
+  color:var(--text);
+}
+.card span{font-size:14px;}
+.actions button{
+  border:none;
+  width:32px;
+  height:32px;
+  border-radius:50%;
+  cursor:pointer;
+  margin-left:6px;
+  color:white;
+  font-weight:700;
+}
+.edit{background:#22c55e;}
+.delete{background:#ef4444;}
+
+/* MODAL */
+.modal{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.45);
+  display:none;
+  justify-content:center;
+  align-items:center;
+  z-index:99;
+}
+.modal-box{
+  background:white;
+  width:420px;
+  border-radius:16px;
+  padding:25px;
+}
+.modal-header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:12px;
+}
+.modal-header h3{font-size:20px;}
+.close{cursor:pointer;font-size:18px;}
+
+label{
+  font-size:13px;
+  font-weight:700;
+  margin-bottom:6px;
+  display:block;
+}
+select,input{
+  width:100%;
+  padding:12px;
+  border-radius:10px;
+  border:1px solid #e2e8f0;
+  margin-bottom:14px;
+}
+.row{display:flex;gap:10px;}
+.save{
+  width:100%;
+  padding:14px;
+  border:none;
+  border-radius:12px;
+  background:#2563eb;
+  color:white;
+  font-weight:700;
+  cursor:pointer;
+}
+</style>
+</head>
+
+<body>
+
+<aside class="sidebar">
+  <div class="brand">Edural</div>
+  <div class="nav">
+    <a href="dashboard.html">Dashboard</a>
+    <a class="active">Marks</a>
+    <a href="attendance.html">Attendance</a>
+    <a href="about.html">About</a>
+    <a href="contact.html">Contact</a>
+  </div>
+  <div class="logout" onclick="logout()">Logout</div>
+</aside>
+
+<main class="main">
+  <div class="header">
+    <h1>Marks & Exams</h1>
+    <button class="add-btn" id="addBtn">+ Record Marks</button>
+  </div>
+
+  <div class="list" id="list"></div>
+</main>
+
+<!-- MODAL -->
+<div class="modal" id="modal">
+  <div class="modal-box">
+    <div class="modal-header">
+      <h3 id="title">Record Marks</h3>
+      <span class="close" onclick="closeModal()">✕</span>
+    </div>
+
+    <label>Subject</label>
+    <select id="subject">
+      <option>English</option>
+      <option>Mathematics</option>
+      <option>HTML & CSS</option>
+      <option>JavaScript</option>
+      <option>Python</option>
+    </select>
+
+    <div class="row">
+      <div>
+        <label>Score</label>
+        <input type="number" id="scored">
+      </div>
+      <div>
+        <label>Max</label>
+        <input type="number" id="total" value="100">
+      </div>
+    </div>
+
+    <label>Type</label>
+    <select id="type">
+      <option>Assignment</option>
+      <option>Quiz</option>
+    </select>
+
+    <label>Date</label>
+    <input type="date" id="date">
+
+    <button class="save" onclick="save()">Save Marks</button>
+  </div>
+</div>
+
+<script>
+const user = JSON.parse(localStorage.getItem("currentUser"));
+if(!user) location.href="login.html";
+
+let students = JSON.parse(localStorage.getItem("students")) || [];
+let student = students.find(s=>s.email===user.email);
+if(!student){
+  student={email:user.email,marks:[]};
+  students.push(student);
+}
+
+const addBtn = document.getElementById("addBtn");
+
+/* ✅ FIX: USE isTeacher FLAG */
+if(!user.isTeacher){
+  addBtn.style.display="none";
+}
+
+let editIndex=null;
+
+function render(){
+  list.innerHTML="";
+  [...student.marks].reverse().forEach((m,i)=>{
+    list.innerHTML+=`
+      <div class="card">
+        <span>${m.subject}</span>
+        <span>${m.type}</span>
+        <span>${m.scored}/${m.total}</span>
+        <span>${Math.round(m.scored/m.total*100)}%</span>
+        <span>${m.date}</span>
+        <div class="actions">
+          ${user.isTeacher ? `
+            <button class="edit" onclick="edit(${i})">✎</button>
+            <button class="delete" onclick="del(${i})">🗑</button>
+          ` : ""}
+        </div>
+      </div>`;
+  });
+}
+
+addBtn.onclick=()=>{
+  editIndex=null;
+  date.value=new Date().toISOString().split("T")[0];
+  modal.style.display="flex";
+};
+
+function closeModal(){modal.style.display="none";}
+
+function save(){
+  const entry={
+    subject:subject.value,
+    type:type.value,
+    scored:+scored.value,
+    total:+total.value,
+    date:date.value
+  };
+  if(editIndex!==null){
+    student.marks[student.marks.length-1-editIndex]=entry;
+  }else{
+    student.marks.push(entry);
+  }
+  localStorage.setItem("students",JSON.stringify(students));
+  closeModal();
+  render();
+}
+
+function edit(i){
+  const m=student.marks[student.marks.length-1-i];
+  editIndex=i;
+  subject.value=m.subject;
+  type.value=m.type;
+  scored.value=m.scored;
+  total.value=m.total;
+  date.value=m.date;
+  modal.style.display="flex";
+}
+
+function del(i){
+  student.marks.splice(student.marks.length-1-i,1);
+  localStorage.setItem("students",JSON.stringify(students));
+  render();
+}
+
+function logout(){
+  localStorage.removeItem("currentUser");
+  location.href="login.html";
+}
+
+render();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,805 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>About | Edural Classes</title>
+
+<!-- <style>
+:root{
+  --primary:#1e88e5;
+  --dark:#0f172a;
+  --bg:#eaf2fb;
+  --text:#1e293b;
+}
+
+/* RESET */
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family: Arial, sans-serif;
+}
+
+body{
+  background:var(--bg);
+  height:100vh;
+  display:flex;
+  overflow:hidden;
+}
+
+/* SIDEBAR */
+.sidebar{
+  width:220px;
+  background:#0f172a;
+  color:white;
+  padding:40px 0;
+  display:flex;
+  flex-direction:column;
+  flex-shrink:0;
+}
+.brand{
+  font-size:22px;
+  font-weight:800;
+  padding:0 30px;
+  margin-bottom:40px;
+}
+.nav a{
+  padding:15px 30px;
+  display:block;
+  text-decoration:none;
+  color:#94a3b8;
+  font-weight:600;
+}
+.nav a.active{
+  background:#1e293b;
+  color:white;
+  border-left:5px solid var(--primary);
+}
+.logout{
+  margin-top:auto;
+  padding:15px 30px;
+  color:#ef4444;
+  font-weight:600;
+  cursor:pointer;
+}
+
+/* MAIN */
+.main{
+  flex:1;
+  overflow-y:auto;
+  padding:60px 80px;
+  color:var(--text);
+}
+
+/* CONTENT (UNCHANGED TEXT) */
+.badge{
+  display:inline-block;
+  background:rgb(30,136,229);
+  color:white;
+  padding:10px 22px;
+  border-radius:30px;
+  font-weight:600;
+  margin-bottom:18px;
+}
+
+.intro{
+  max-width:950px;
+}
+
+.intro h1{
+  font-size:clamp(28px,4vw,40px);
+  margin-bottom:16px;
+  font-weight:700;
+}
+
+.intro p{
+  font-size:16px;
+  line-height:1.8;
+  color:#1e293b;
+}
+
+.section{
+  margin-top:70px;
+}
+
+.section h2{
+  font-size:28px;
+  margin-bottom:20px;
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+  gap:22px;
+}
+
+.card{
+  background:white;
+  padding:26px;
+  border-radius:18px;
+  box-shadow:0 10px 22px rgba(30,136,229,0.15);
+}
+
+.card h3{
+  color:rgb(30,136,229);
+  margin-bottom:10px;
+  font-weight:700;
+}
+
+/* MISSION / VISION */
+.dual{
+  display:flex;
+  gap:30px;
+  flex-wrap:wrap;
+}
+
+.dual-box{
+  flex:1;
+  background:linear-gradient(180deg,rgb(30,136,229),rgb(13,71,161));
+  color:white;
+  padding:32px;
+  border-radius:22px;
+}
+
+.dual-box h3{
+  font-size:22px;
+  margin-bottom:12px;
+}
+
+/* VALUES */
+.values ul{
+  list-style:none;
+  margin-top:18px;
+}
+
+.values li{
+  background:white;
+  padding:15px 20px;
+  margin-bottom:14px;
+  border-radius:14px;
+  font-weight:600;
+  box-shadow:0 8px 18px rgba(0,0,0,0.08);
+}
+
+/* STATS */
+.stats{
+  margin-top:70px;
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+  gap:22px;
+}
+
+.stat{
+  background:linear-gradient(180deg,rgb(30,136,229),rgb(13,71,161));
+  color:white;
+  padding:36px;
+  border-radius:22px;
+  text-align:center;
+}
+
+.stat h1{
+  font-size:34px;
+  margin-bottom:8px;
+}
+
+/* MOBILE */
+@media(max-width:900px){
+  .sidebar{display:none;}
+  .main{padding:30px;}
+}
+</style> -->
+<!-- <style>
+  :root{
+  --primary:#1e88e5;
+  --primary-dark:#0d47a1;
+  --dark:#0f172a;
+  --bg:#eaf2fb;
+  --text:#1e293b;
+  --muted:#94a3b8;
+}
+
+/* RESET */
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family: Arial, sans-serif;
+}
+
+body{
+  background:var(--bg);
+  height:100vh;
+  display:flex;
+  overflow:hidden; /* BODY LOCKED */
+}
+
+/* SIDEBAR */
+.sidebar{
+  width:220px;
+  background:linear-gradient(180deg,#0f172a,#020617);
+  color:white;
+  padding:40px 0;
+  display:flex;
+  flex-direction:column;
+  flex-shrink:0;
+  box-shadow:4px 0 18px rgba(0,0,0,0.25);
+}
+
+.brand{
+  font-size:22px;
+  font-weight:800;
+  padding:0 30px;
+  margin-bottom:40px;
+  letter-spacing:.4px;
+}
+
+.nav a{
+  padding:15px 30px;
+  display:block;
+  text-decoration:none;
+  color:var(--muted);
+  font-weight:600;
+  transition:all .3s ease;
+}
+
+.nav a:hover{
+  background:#1e293b;
+  color:white;
+  padding-left:36px;
+}
+
+.nav a.active{
+  background:#1e293b;
+  color:white;
+  border-left:5px solid var(--primary);
+}
+
+.logout{
+  margin-top:auto;
+  padding:15px 30px;
+  color:#ef4444;
+  font-weight:600;
+  cursor:pointer;
+}
+
+.logout:hover{
+  background:#1e293b;
+}
+
+/* MAIN (SCROLL FIX) */
+.main{
+  flex:1;
+  height:100vh;        /* REQUIRED */
+  overflow-y:auto;    /* SCROLL HERE */
+  padding:60px 80px;
+  color:var(--text);
+}
+
+/* INTRO */
+.badge{
+  display:inline-block;
+  background:linear-gradient(135deg,var(--primary),var(--primary-dark));
+  color:white;
+  padding:10px 22px;
+  border-radius:30px;
+  font-weight:600;
+  margin-bottom:18px;
+  box-shadow:0 6px 16px rgba(30,136,229,.35);
+}
+
+.intro{
+  max-width:950px;
+}
+
+.intro h1{
+  font-size:clamp(28px,4vw,40px);
+  margin-bottom:16px;
+  font-weight:700;
+}
+
+.intro p{
+  font-size:16px;
+  line-height:1.85;
+  color:#1e293b;
+}
+
+/* SECTION */
+.section{
+  margin-top:70px;
+}
+
+.section h2{
+  font-size:28px;
+  margin-bottom:20px;
+  font-weight:700;
+}
+
+/* GRID */
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+  gap:22px;
+}
+
+.card{
+  background:white;
+  padding:26px;
+  border-radius:18px;
+  box-shadow:0 10px 22px rgba(30,136,229,0.15);
+  transition:transform .3s ease, box-shadow .3s ease;
+}
+
+.card:hover{
+  transform:translateY(-6px);
+  box-shadow:0 18px 30px rgba(30,136,229,0.25);
+}
+
+.card h3{
+  color:var(--primary);
+  margin-bottom:10px;
+  font-weight:700;
+}
+
+/* MISSION / VISION */
+.dual{
+  display:flex;
+  gap:30px;
+  flex-wrap:wrap;
+}
+
+.dual-box{
+  flex:1;
+  background:linear-gradient(180deg,var(--primary),var(--primary-dark));
+  color:white;
+  padding:32px;
+  border-radius:22px;
+  box-shadow:0 18px 40px rgba(30,136,229,.45);
+}
+
+.dual-box h3{
+  font-size:22px;
+  margin-bottom:12px;
+}
+
+/* VALUES */
+.values ul{
+  list-style:none;
+  margin-top:18px;
+}
+
+.values li{
+  background:white;
+  padding:15px 20px;
+  margin-bottom:14px;
+  border-radius:14px;
+  font-weight:600;
+  box-shadow:0 8px 18px rgba(0,0,0,0.08);
+  transition:transform .3s ease;
+}
+
+.values li:hover{
+  transform:translateX(6px);
+}
+
+/* STATS */
+.stats{
+  margin-top:70px;
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+  gap:22px;
+}
+
+.stat{
+  background:linear-gradient(180deg,var(--primary),var(--primary-dark));
+  color:white;
+  padding:36px;
+  border-radius:22px;
+  text-align:center;
+  box-shadow:0 18px 36px rgba(30,136,229,.45);
+  transition:transform .3s ease;
+}
+
+.stat:hover{
+  transform:scale(1.05);
+}
+
+.stat h1{
+  font-size:34px;
+  margin-bottom:8px;
+}
+
+/* MOBILE */
+@media(max-width:900px){
+  .sidebar{display:none;}
+  .main{
+    padding:30px;
+    height:100vh;
+  }
+}
+
+</style> -->
+<style>
+  :root{
+  --primary:#1e88e5;
+  --primary-dark:#0d47a1;
+  --dark:#0f172a;
+  --bg:#eaf2fb;
+  --text:#0f172a;
+  --muted:#475569;
+}
+
+/* RESET + READABLE FONT STACK */
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    Inter,
+    Roboto,
+    Arial,
+    sans-serif;
+}
+
+body{
+  background:var(--bg);
+  height:100vh;
+  display:flex;
+  overflow:hidden;
+  -webkit-font-smoothing:antialiased;
+  text-rendering:optimizeLegibility;
+}
+
+/* SIDEBAR */
+.sidebar{
+  width:220px;
+  background:linear-gradient(180deg,#0f172a,#020617);
+  color:white;
+  padding:42px 0;
+  display:flex;
+  flex-direction:column;
+  flex-shrink:0;
+  box-shadow:4px 0 18px rgba(0,0,0,0.25);
+}
+
+.brand{
+  font-size:24px;
+  font-weight:800;
+  padding:0 30px;
+  margin-bottom:44px;
+  letter-spacing:.4px;
+}
+
+.nav a{
+  padding:15px 30px;
+  display:block;
+  text-decoration:none;
+  color:#94a3b8;
+  font-weight:600;
+  font-size:15px;
+  letter-spacing:.25px;
+  line-height:1.4;
+  transition:.3s;
+}
+
+.nav a:hover{
+  background:#1e293b;
+  color:white;
+  padding-left:36px;
+}
+
+.nav a.active{
+  background:#1e293b;
+  color:white;
+  border-left:5px solid var(--primary);
+}
+
+.logout{
+  margin-top:auto;
+  padding:16px 30px;
+  color:#ef4444;
+  font-weight:600;
+  font-size:15px;
+}
+
+/* MAIN (SCROLLS) */
+.main{
+  flex:1;
+  height:100vh;
+  overflow-y:auto;
+  padding:64px 88px;
+  color:var(--text);
+}
+
+/* INTRO */
+.badge{
+  display:inline-block;
+  background:linear-gradient(135deg,var(--primary),var(--primary-dark));
+  color:white;
+  padding:10px 26px;
+  border-radius:999px;
+  font-weight:600;
+  font-size:13.5px;
+  letter-spacing:.5px;
+  margin-bottom:22px;
+}
+
+.intro{
+  max-width:980px;
+}
+
+.intro h1{
+  font-size:clamp(32px,4vw,44px);
+  margin-bottom:22px;
+  font-weight:800;
+  line-height:1.28;
+  letter-spacing:-.3px;
+}
+
+.intro p{
+  font-size:17.5px;
+  line-height:1.9;
+  color:var(--muted);
+  max-width:900px;
+}
+
+/* SECTIONS */
+.section{
+  margin-top:96px;
+}
+
+.section h2{
+  font-size:30px;
+  margin-bottom:32px;
+  font-weight:800;
+  line-height:1.3;
+  letter-spacing:-.25px;
+}
+
+/* GRID */
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+  gap:30px;
+}
+
+.card{
+  background:white;
+  padding:32px;
+  border-radius:22px;
+  box-shadow:0 14px 30px rgba(30,136,229,0.15);
+}
+
+.card h3{
+  font-size:18.5px;
+  font-weight:700;
+  margin-bottom:14px;
+  line-height:1.4;
+}
+
+.card p{
+  font-size:16px;
+  line-height:1.85;
+  color:var(--muted);
+}
+
+/* MISSION / VISION */
+.dual{
+  display:flex;
+  gap:36px;
+  flex-wrap:wrap;
+}
+
+.dual-box{
+  flex:1;
+  background:linear-gradient(145deg,var(--primary),var(--primary-dark));
+  color:white;
+  padding:40px;
+  border-radius:28px;
+}
+
+.dual-box h3{
+  font-size:24px;
+  font-weight:700;
+  margin-bottom:16px;
+  line-height:1.35;
+}
+
+.dual-box p{
+  font-size:16.8px;
+  line-height:1.85;
+  opacity:.95;
+}
+
+/* VALUES */
+.values ul{
+  list-style:none;
+  margin-top:26px;
+}
+
+.values li{
+  background:white;
+  padding:20px 26px;
+  margin-bottom:18px;
+  border-radius:20px;
+  font-weight:600;
+  font-size:16px;
+  line-height:1.8;
+  color:#1e293b;
+  box-shadow:0 10px 22px rgba(0,0,0,0.08);
+}
+
+/* STATS */
+.stats{
+  margin-top:96px;
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+  gap:30px;
+}
+
+.stat{
+  background:linear-gradient(145deg,var(--primary),var(--primary-dark));
+  color:white;
+  padding:44px 36px;
+  border-radius:30px;
+  text-align:center;
+}
+
+.stat h1{
+  font-size:38px;
+  margin-bottom:14px;
+  font-weight:800;
+  letter-spacing:-.35px;
+}
+
+.stat p{
+  font-size:15.5px;
+  letter-spacing:.35px;
+  opacity:.95;
+}
+
+/* MOBILE */
+@media(max-width:900px){
+  .sidebar{display:none;}
+  .main{
+    padding:32px 26px;
+    height:100vh;
+  }
+
+  .intro h1{
+    font-size:30px;
+  }
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="brand">Edural</div>
+  <div class="nav">
+    <a href="dashboard.html">Dashboard</a>
+    <a href="marks.html">Marks</a>
+    <a href="attendance.html">Attendance</a>
+    <a class="active">About</a>
+    <a href="contact.html">Contact</a>
+  </div>
+  <div class="logout" onclick="logout()">Logout</div>
+</aside>
+
+<!-- MAIN -->
+<main class="main">
+
+  <!-- INTRO -->
+  <div class="intro">
+    <div class="badge">About Edural Classes</div>
+    <h1>Quality Education for Every Student</h1>
+    <p>
+      Edural Classes is an innovative educational initiative focused on transforming
+      education in Tier 3 & 4 cities and rural India. By combining expert educators,
+      modern digital tools, and structured academic systems, Edural Classes aims to
+      deliver urban-quality education regardless of geographical limitations.
+    </p>
+  </div>
+
+  <!-- WHY THIS APP -->
+  <div class="section">
+    <h2>Why This Student Performance Dashboard?</h2>
+    <div class="grid">
+      <div class="card">
+        <h3>Performance Transparency</h3>
+        <p>
+          This dashboard enables students to clearly understand their academic
+          progress through visual indicators like charts, rankings, and summaries.
+        </p>
+      </div>
+      <div class="card">
+        <h3>Teacher-Guided Monitoring</h3>
+        <p>
+          Teachers can record and manage marks and attendance, ensuring structured
+          academic tracking for every student.
+        </p>
+      </div>
+      <div class="card">
+        <h3>Data-Driven Learning</h3>
+        <p>
+          By visualizing performance data, students can identify strengths,
+          weaknesses, and improvement areas early.
+        </p>
+      </div>
+      <div class="card">
+        <h3>Support for Rural Education</h3>
+        <p>
+          This system bridges the academic monitoring gap often faced in rural and
+          semi-urban education environments.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- MISSION / VISION -->
+  <div class="section dual">
+    <div class="dual-box">
+      <h3>Our Mission</h3>
+      <p>
+        To bridge the educational divide by providing access to expert teachers,
+        digital classrooms, and structured performance monitoring systems that help
+        students grow with confidence.
+      </p>
+    </div>
+    <div class="dual-box">
+      <h3>Our Vision</h3>
+      <p>
+        To empower students across India with technology-driven education tools
+        that promote accountability, self-analysis, and academic excellence.
+      </p>
+    </div>
+  </div>
+
+  <!-- CORE VALUES -->
+  <div class="section values">
+    <h2>Our Core Values</h2>
+    <ul>
+      <li>✔ Innovation through technology-driven learning systems</li>
+      <li>✔ Accessibility of quality education for every student</li>
+      <li>✔ Excellence in academic monitoring and evaluation</li>
+      <li>✔ Student-centric and data-informed approach</li>
+    </ul>
+  </div>
+
+  <!-- STATS -->
+  <div class="stats">
+    <div class="stat">
+      <h1>5</h1>
+      <p>Core Subjects Tracked</p>
+    </div>
+    <div class="stat">
+      <h1>2</h1>
+      <p>User Roles Supported</p>
+    </div>
+    <div class="stat">
+      <h1>100%</h1>
+      <p>Data-Driven Evaluation</p>
+    </div>
+    <div class="stat">
+      <h1>Rural+</h1>
+      <p>Education Focus</p>
+    </div>
+  </div>
+
+</main>
+
+<script>
+function logout(){
+  localStorage.removeItem("currentUser");
+  location.href="login.html";
+}
+</script>
+
+</body>
+</html>

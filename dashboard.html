@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Student Performance Dashboard</title>
+    <style>
+        :root{
+            --primary:#1e40af; --accent:#3b82f6; --bg:#f8fafc;
+            --dark:#0f172a; --light:#64748b; --success: #10b981; 
+            --card-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.04), 0 8px 10px -6px rgba(0, 0, 0, 0.04);
+        }
+        *{ margin:0; padding:0; box-sizing:border-box; font-family:'Plus Jakarta Sans', 'Segoe UI', system-ui, sans-serif; }
+        body{ background:var(--bg); height:100vh; display:flex; overflow:hidden; }
+        .sidebar{ width:240px; background:#0f172a; color:white; display:flex; flex-direction:column; padding:40px 0; z-index: 10; }
+        .logo-box{ display:flex; justify-content:center; align-items:center; padding-bottom:25px; margin-bottom:25px; border-bottom:1px solid rgba(255,255,255,0.05); }
+        .logo-box img{ width:160px; }
+        .nav-link{ padding:14px 25px; margin: 4px 15px; border-radius: 12px; color:#94a3b8; text-decoration:none; font-weight:600; display:block; transition: 0.3s; }
+        .nav-link:hover { color: white; background: rgba(255,255,255,0.05); }
+        .nav-link.active{ background: var(--accent); color: white; box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3); }
+        .logout-box{ margin-top:auto; padding:20px 20px; }
+        .logout-btn{ width:100%; padding:12px; border-radius:12px; border:none; background: rgba(248, 113, 113, 0.1); color:#f87171; font-weight:700; cursor:pointer; }
+        .main{ flex:1; display:flex; flex-direction:column; overflow-y: auto; position: relative; }
+        .premium-header { padding: 40px 40px 120px 40px; background: linear-gradient(180deg, #ffffff 0%, #e2e8f0 100%); border-bottom: 1px solid #cbd5e1; position: relative; overflow: hidden; }
+        .premium-header::before { content: ""; position: absolute; top: 0; left: 0; right: 0; bottom: 0; opacity: 0.05; background-image: radial-gradient(var(--primary) 1px, transparent 1px); background-size: 24px 24px; }
+        .premium-header h1 { font-size: 36px; color: var(--dark); font-weight: 800; letter-spacing: -1.2px; position: relative; line-height: 1.1; }
+        .premium-header p { color: var(--primary); font-weight: 700; font-size: 20px; margin-top: 12px; position: relative; display: flex; align-items: center; gap: 10px; }
+        .status-dot { width: 10px; height: 10px; background: var(--success); border-radius: 50%; display: inline-block; box-shadow: 0 0 10px var(--success); animation: pulse 2s infinite; }
+        @keyframes pulse { 0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); } 70% { transform: scale(1); box-shadow: 0 0 0 10px rgba(16, 185, 129, 0); } 100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); } }
+        .dashboard-content { padding: 0 40px 40px 40px; margin-top: -70px; z-index: 5; }
+        .dashboard-grid{ display:grid; grid-template-columns:1fr 1fr 1fr; grid-template-rows: 240px auto; gap:24px; }
+        .card{ background:white; border-radius:24px; padding:24px; display:flex; flex-direction:column; box-shadow: var(--card-shadow); border: 1px solid rgba(255,255,255,0.8); }
+        .overall-card{ 
+          background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%); 
+          color: rgb(238, 238, 238);
+           align-items: center; 
+           
+          justify-content: center;
+           border: none; }
+
+        .ring-lg{
+           height:170px;
+           aspect-ratio:1/1; 
+           background: conic-gradient(#36c217 var(--val), rgba(22, 5, 5, 0.2));
+            border-radius: 50%;
+             display: grid;
+              place-items: center; }
+        .ring-lg::after{ content:attr(data-val); width:82%; height:82%; background: rgba(255, 255, 255, 0.15); backdrop-filter: blur(8px); border-radius: 50%; display: grid; place-items: center; font-size: 32px; font-weight: 900; }
+        .stats-stack { display: flex; flex-direction: column; gap: 16px; }
+        .stat-box { flex: 1; background: #ffffff; border-radius: 20px; padding: 16px 20px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 4px 15px rgba(0,0,0,0.03); border: 1px solid rgba(0,0,0,0.05); position: relative; }
+        .stat-label { color: var(--accent); font-size: 11px; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 4px; }
+        .score-badge { background: #f8fafc; border: 1px solid #e2e8f0; padding: 6px 14px; border-radius: 12px; display: inline-flex; flex-direction: column; }
+        .score-pill { font-size: 20px; font-weight: 900; color: var(--dark); line-height: 1; }
+        .attempt-text { font-size: 10px; font-weight: 700; color: var(--light); text-transform: uppercase; margin-top: 4px; }
+        .ring-sm { height: 64px; width: 64px; background: conic-gradient(var(--accent) var(--p), #f1f5f9 0); border-radius: 50%; display: grid; place-items: center; box-shadow: 0 4px 12px rgba(59, 130, 246, 0.15); margin-left: 15px; }
+        .ring-sm::after { content: attr(data-val); width: 78%; height: 78%; background: white; border-radius: 50%; display: grid; place-items: center; font-size: 13px; font-weight: 900; color: var(--dark); }
+        .attendance-card { align-items:center; justify-content:center; text-align: center; }
+        .ring-md{ height:110px; width:110px; background: conic-gradient(var(--success) var(--p), #f1f5f9 0); border-radius: 50%; display: grid; place-items: center; }
+        .ring-md::after{ content:attr(data-val); width:82%; height:82%; background:white; border-radius:50%; display:grid; place-items:center; font-size:24px; font-weight:900; }
+        .status-badge { margin-top: 12px; font-size: 12px; font-weight: 700; padding: 4px 12px; border-radius: 12px; }
+        .graph-card { grid-column: span 2; min-height: 350px; }
+        .chart-wrapper { flex: 1; display: flex; margin-top: 20px; gap: 15px; }
+        .y-axis { display: flex; flex-direction: column; justify-content: space-between; padding-bottom: 35px; color: var(--light); font-size: 11px; font-weight: 700; text-align: right; width: 30px; }
+        .graph-container { flex: 1; position: relative; display: flex; align-items: flex-end; justify-content: space-around; border-left: 1px solid #e2e8f0; border-bottom: 1px solid #e2e8f0; padding: 0 10px; }
+        .grid-lines { position: absolute; top: 0; left: 0; right: 0; bottom: 0; display: flex; flex-direction: column; justify-content: space-between; pointer-events: none; z-index: 0; }
+        .grid-lines div { width: 100%; border-top: 1px dashed #e2e8f0; }
+        .bar-wrap { width: 45px; height: 100%; display: flex; flex-direction: column; justify-content: flex-end; align-items: center; position: relative; z-index: 1; }
+        .bar-value { font-size: 10px; font-weight: 800; color: var(--primary); margin-bottom: 5px; }
+        .bar { width: 100%; background: linear-gradient(to top, var(--primary), var(--accent)); border-radius: 8px 8px 0 0; transition: height 1s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        .label { position: absolute; bottom: -30px; font-size: 11px; font-weight: 700; color: var(--light); white-space: nowrap; transform: rotate(-15deg); }
+        .rank-card{ grid-column: span 1; }
+        .rank-premium{ display:flex; flex-direction:column; gap:12px; margin-top: 15px; }
+        .rank-item{ padding:12px; border-radius:16px; display:flex; align-items:center; gap:12px; background: #f8fafc; }
+        .rank-item.self{ background: #eff6ff; border: 1px solid #bfdbfe; }
+        .rank-badge{ width:32px; height:32px; border-radius:10px; display:grid; place-items:center; font-weight:800; }
+        .rank-1{ background:#fef08a; color:#854d0e; }
+        .rank-2{ background:#e2e8f0; color:#475569; }
+        .rank-3{ background:#ffedd5; color:#9a3412; }
+        .rank-default{ background:#fff; color:#94a3b8; border: 1px solid #e2e8f0;}
+        .rank-name { font-size: 14px; font-weight: 700; flex: 1; }
+        .rank-score { font-weight: 800; color: var(--accent); }
+    </style>
+</head>
+
+<body>
+
+    <aside class="sidebar">
+        <div class="logo-box">
+            <img src="edural logo.png" alt="Edural Logo">
+        </div>
+        <a class="nav-link active" href="#">Dashboard</a>
+        <a class="nav-link" href="marks.html">Marks</a>
+        <a class="nav-link" href="attendance.html">Attendance</a>
+        <a class="nav-link" href="about.html">About</a>
+        <a class="nav-link" href="contact.html">Contact</a>
+        <div class="logout-box">
+            <button class="logout-btn" onclick="logout()">Logout</button>
+        </div>
+    </aside>
+
+    <main class="main">
+        <header class="premium-header">
+            <h1>Student Performance Dashboard</h1>
+            <p id="welcome">
+                <span class="status-dot"></span>
+                <span></span>
+            </p>
+        </header>
+
+        <div class="dashboard-content">
+            <div class="dashboard-grid">
+                <div class="card overall-card">
+                    <h2>Overall Performance</h2>
+                    <div id="overallRing" class="ring-lg" data-val="0%" style="--val:0%"></div>
+                </div>
+
+                <div class="stats-stack">
+                    <div class="stat-box">
+                        <div class="stat-content">
+                            <span class="stat-label">Assignments</span>
+                            <div class="score-badge">
+                                <div class="score-pill" id="assignText">0/0</div>
+                                <span class="attempt-text">Attempted</span>
+                            </div>
+                        </div>
+                        <div id="assignRing" class="ring-sm" data-val="0%" style="--p:0%"></div>
+                    </div>
+                    
+                    <div class="stat-box">
+                        <div class="stat-content">
+                            <span class="stat-label">Quizzes</span>
+                            <div class="score-badge">
+                                <div class="score-pill" id="quizText">0/0</div>
+                                <span class="attempt-text">Attempted</span>
+                            </div>
+                        </div>
+                        <div id="quizRing" class="ring-sm" data-val="0%" style="--p:0%"></div>
+                    </div>
+                </div>
+
+                <div class="card attendance-card">
+                    <h3 style="font-size: 16px; color:var(--light); margin-bottom: 15px;">Attendance</h3>
+                    <div id="attRing" class="ring-md" data-val="0%" style="--p:0%"></div>
+                    <div class="status-badge" id="attStatus">Checking...</div>
+                </div>
+
+                <div class="card graph-card">
+                    <h3 style="font-size: 18px; color:var(--dark);">Subject Wise Performance</h3>
+                    <div class="chart-wrapper">
+                        <div class="y-axis">
+                            <span>100</span><span>80</span><span>60</span><span>40</span><span>20</span><span>0</span>
+                        </div>
+                        <div id="bars" class="graph-container">
+                            <div class="grid-lines">
+                                <div></div><div></div><div></div><div></div><div></div><div></div>
+                            </div>
+                            </div>
+                    </div>
+                </div>
+
+                <div class="card rank-card">
+                    <h3 style="font-size: 18px; color:var(--dark);">Leaderboard</h3>
+                    <div id="rankList" class="rank-premium"></div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        /**
+         * 1. INITIALIZATION & SECURITY
+         * Retrieve data from LocalStorage and verify session.
+         */
+        const currentUser = JSON.parse(localStorage.getItem("currentUser"));
+        if(!currentUser) window.location.href = "login.html";
+
+        const students = JSON.parse(localStorage.getItem("students")) || [];
+        const student = students.find(s => s.email === currentUser.email);
+        if(!student) window.location.href = "login.html";
+
+        // Display user name in header
+        document.querySelector("#welcome span:last-child").textContent = `Welcome back, ${student.name}`;
+
+        /**
+         * 2. UTILITY FUNCTIONS
+         * Reusable logic for math and UI updates.
+         */
+        // Simple percentage calculator
+        const getPct = (score, total) => total > 0 ? Math.round((score / total) * 100) : 0;
+
+        // Function to update the circular progress rings
+        const updateRing = (elementId, percentage) => {
+            const el = document.getElementById(elementId);
+            el.dataset.val = `${percentage}%`;
+            el.style.setProperty(elementId.includes('overall') ? "--val" : "--p", `${percentage}%`);
+        };
+
+        /**
+         * 3. PERFORMANCE LOGIC
+         * Calculating scores for Assignments, Quizzes, and Overall.
+         */
+        const marks = student.marks || [];
+        
+        // Calculate Totals
+        let grandScored = 0, grandTotal = 0;
+        let assignScored = 0, assignTotal = 0;
+        let quizScored = 0, quizTotal = 0;
+
+        marks.forEach(m => {
+            grandScored += m.scored;
+            grandTotal += m.total;
+            if(m.type === "Assignment") { assignScored += m.scored; assignTotal += m.total; }
+            if(m.type === "Quiz") { quizScored += m.scored; quizTotal += m.total; }
+        });
+
+        // Update Overall Ring
+        updateRing("overallRing", getPct(grandScored, grandTotal));
+
+        // Update Assignment Section
+        document.getElementById("assignText").textContent = `${assignScored}/${assignTotal}`;
+        updateRing("assignRing", getPct(assignScored, assignTotal));
+
+        // Update Quiz Section
+        document.getElementById("quizText").textContent = `${quizScored}/${quizTotal}`;
+        updateRing("quizRing", getPct(quizScored, quizTotal));
+
+        /**
+         * 4. ATTENDANCE LOGIC
+         */
+        let attended = 0, totalClasses = 0;
+        (student.attendance || []).forEach(record => {
+            attended += Number(record.attendedClasses) || 0;
+            totalClasses += Number(record.totalClasses) || 0;
+        });
+
+        const attendancePct = getPct(attended, totalClasses);
+        updateRing("attRing", attendancePct);
+
+        const statusEl = document.getElementById('attStatus');
+        if(attendancePct >= 75) {
+            statusEl.textContent = "Good Standing";
+            statusEl.style.cssText = "background: #ecfdf5; color: #10b981;";
+        } else {
+            statusEl.textContent = "Low Attendance";
+            statusEl.style.cssText = "background: #fff1f2; color: #f43f5e;";
+        }
+
+        /**
+         * 5. BAR CHART LOGIC
+         * Grouping marks by subject and rendering bars.
+         */
+        const barContainer = document.getElementById("bars");
+        const subjectGroups = {};
+
+        marks.forEach(m => {
+            if(!subjectGroups[m.subject]) subjectGroups[m.subject] = { s: 0, t: 0 };
+            subjectGroups[m.subject].s += m.scored;
+            subjectGroups[m.subject].t += m.total;
+        });
+
+        let barHTML = `<div class="grid-lines"><div></div><div></div><div></div><div></div><div></div><div></div></div>`;
+        
+        Object.entries(subjectGroups).forEach(([subject, data]) => {
+            const p = getPct(data.s, data.t);
+            barHTML += `
+                <div class="bar-wrap">
+                    <span class="bar-value">${p}%</span>
+                    <div class="bar" style="height:${p}%"></div>
+                    <div class="label">${subject}</div>
+                </div>`;
+        });
+        barContainer.innerHTML = barHTML;
+
+        /**
+         * 6. LEADERBOARD LOGIC
+         * Ranking students based on their global performance.
+         */
+        const leaderboard = students.map(s => {
+            let s_score = 0, s_total = 0;
+            (s.marks || []).forEach(m => { s_score += m.scored; s_total += m.total; });
+            return {
+                name: s.name,
+                email: s.email,
+                pct: getPct(s_score, s_total)
+            };
+        }).sort((a, b) => b.pct - a.pct).slice(0, 5);
+
+        const rankList = document.getElementById("rankList");
+        rankList.innerHTML = leaderboard.map((user, index) => {
+            const rankClass = index === 0 ? 'rank-1' : index === 1 ? 'rank-2' : index === 2 ? 'rank-3' : 'rank-default';
+            const isSelf = user.email === currentUser.email;
+            return `
+                <div class="rank-item ${isSelf ? 'self' : ''}">
+                    <div class="rank-badge ${rankClass}">${index + 1}</div>
+                    <div class="rank-name">${user.name} ${isSelf ? '(You)' : ''}</div>
+                    <div class="rank-score">${user.pct}%</div>
+                </div>`;
+        }).join('');
+
+        /**
+         * 7. LOGOUT
+         */
+        function logout(){
+            localStorage.removeItem("currentUser");
+            window.location.href = "login.html";
+        }
+    </script>
+</body>
+</html>

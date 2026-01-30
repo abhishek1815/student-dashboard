@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Student Performance Dashboard</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      height: 100vh;
+      width: 100vw;
+      background: rgb(203, 224, 247);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    .hero-wrapper {
+      width: 100vw;
+      height: 100vh;
+      background: linear-gradient(135deg, rgb(16,185,129), rgb(14,165,233));
+      /* border-radius: 40px; */
+      box-shadow: 0 40px 100px rgba(0, 0, 0, 0.2);
+      overflow: hidden;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 40px 60px;
+      color: white;
+    }
+
+    .logo { font-weight: 800; font-size: 22px; }
+
+    .nav-links { display: flex; gap: 40px; }
+    .nav-links a {
+      color: white;
+      text-decoration: none;
+      font-weight: 600;
+      opacity: 0.8;
+    }
+
+    .hero {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 0 40px;
+      color: white;
+      margin-top: -60px;
+    }
+
+    .hero h1 {
+      font-size: clamp(40px, 6vw, 80px);
+      font-weight: 800;
+    }
+
+    .hero h2 {
+      font-size: clamp(18px, 2vw, 26px);
+      margin-bottom: 30px;
+      opacity: 0.9;
+    }
+
+    .hero p {
+      max-width: 650px;
+      margin-bottom: 45px;
+      font-size: 18px;
+      line-height: 1.6;
+      color: rgb(224, 242, 254);
+    }
+
+    .hero button {
+      padding: 18px 50px;
+      border-radius: 100px;
+      border: none;
+      font-weight: 700;
+      font-size: 16px;
+      cursor: pointer;
+      background: white;
+      color: rgb(14, 165, 233);
+    }
+  </style>
+</head>
+<body>
+
+<div class="hero-wrapper">
+
+  <nav class="navbar">
+    <div class="logo">Edural</div>
+    <div class="nav-links">
+      <a href="#">Home</a>
+      <a href="about.html">About</a>
+      <a href="login.html">Dashboard</a>
+      <a href="contact.html">Contact</a>
+    </div>
+  </nav>
+
+  <section class="hero">
+    <h1>Welcome</h1>
+    <h2>Student Performance Dashboard</h2>
+    <p>
+      A modern dashboard that helps teachers manage academic records
+      and enables students to track learning progress visually.
+    </p>
+
+    <button onclick="location.href='login.html'">
+      Explore Dashboard
+    </button>
+  </section>
+
+</div>
+
+</body>
+</html>
